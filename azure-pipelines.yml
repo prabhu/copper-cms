@@ -1,0 +1,35 @@
+trigger:
+- master
+- feature/*
+
+pool:
+  vmImage: 'ubuntu-20.04'
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m -Dmaven.test.skip=true'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+
+- task: CmdLine@2
+  displayName: Download NG SAST
+  inputs:
+    script: |
+      curl https://cdn.shiftleft.io/download/sl > sl && chmod a+rx sl
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: CmdLine@2
+  displayName: Analyze with NG SAST
+  inputs:
+    script: |
+      ./sl analyze --app copper-cms --verbose --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg copper-server/target/copper-server-1.15.2.war
+    workingDirectory: '$(Build.SourcesDirectory)'
+  env:
+    SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
+    SL_CPG_OPTS: "-J-Xms2g -J-Xmx6g"
