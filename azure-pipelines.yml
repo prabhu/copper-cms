@@ -1,10 +1,6 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
-- main
+- master
+- feature/*
 
 pool:
   vmImage: 'ubuntu-20.04'
@@ -20,3 +16,19 @@ steps:
     publishJUnitResults: false
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+- task: CmdLine@2
+  displayName: Download NG SAST
+  inputs:
+    script: |
+      curl https://cdn.shiftleft.io/download/sl > sl && chmod a+rx sl
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: CmdLine@2
+  displayName: Analyze with NG SAST
+  inputs:
+    script: |
+      ./sl analyze --app copper-cms --verbose --tag branch=$(Build.SourceBranchName) --sca --java --cpg copper-server/target/copper-server-1.15.2.war
+    workingDirectory: '$(Build.SourcesDirectory)'
+  env:
+    SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
