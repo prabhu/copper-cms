@@ -32,4 +32,5 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
   env:
     SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
-    SL_CPG_OPTS: "-J-Xms2g -J-Xmx6g"
+    SHIFTLEFT_JAVA_OPTS: "-Xmx7g"
+
