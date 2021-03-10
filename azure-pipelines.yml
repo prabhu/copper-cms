@@ -15,7 +15,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    goals: 'install'
 
 - task: CmdLine@2
   displayName: Download NG SAST
@@ -28,8 +28,8 @@ steps:
   displayName: Analyze with NG SAST
   inputs:
     script: |
-      ./sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg copper-server/target/copper-server-1.15.2.war
-    workingDirectory: '$(Build.SourcesDirectory)'
+      ../sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
+    workingDirectory: '$(Build.SourcesDirectory)/copper-server'
   env:
     SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
     SL_CPG_OPTS: "-J-Xms2g -J-Xmx6g"
