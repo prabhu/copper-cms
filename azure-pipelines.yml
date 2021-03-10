@@ -25,18 +25,13 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: CmdLine@2
-  displayName: Maven install
-  inputs:
-    script: |
-      mvn install -Dmaven.test.skip=true
-    workingDirectory: '$(Build.SourcesDirectory)'
-
-- task: CmdLine@2
   displayName: Analyze with NG SAST
   inputs:
     script: |
+      mvn install -Dmaven.test.skip=true
+      cd copper-server
       ../sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
-    workingDirectory: '$(Build.SourcesDirectory)/copper-server'
+    workingDirectory: '$(Build.SourcesDirectory)'
   env:
     SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
     SL_CPG_OPTS: "-J-Xms2g -J-Xmx6g"
