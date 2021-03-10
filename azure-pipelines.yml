@@ -6,16 +6,6 @@ pool:
   vmImage: 'ubuntu-20.04'
 
 steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m -Dmaven.test.skip=true'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
 
 - task: CmdLine@2
   displayName: Download NG SAST
@@ -28,7 +18,7 @@ steps:
   displayName: Analyze with NG SAST
   inputs:
     script: |
-      mvn install -Dmaven.test.skip=true
+      mvn package install -Dmaven.test.skip=true
       cd copper-server
       ../sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
     workingDirectory: '$(Build.SourcesDirectory)'
