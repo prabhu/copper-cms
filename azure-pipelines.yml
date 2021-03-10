@@ -1,6 +1,7 @@
 trigger:
 - master
 - feature/*
+- test/*
 
 pool:
   vmImage: 'ubuntu-20.04'
@@ -19,7 +20,7 @@ steps:
   inputs:
     script: |
       curl https://cdn.shiftleft.io/download/sl > sl && chmod a+rx sl
-      sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
+      ./sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
     workingDirectory: '$(Build.SourcesDirectory)/copper-server'
   env:
     SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
