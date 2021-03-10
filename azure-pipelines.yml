@@ -18,7 +18,7 @@ steps:
   displayName: Analyze with NG SAST
   inputs:
     script: |
-      mvn package install -Dmaven.test.skip=true
+      mvn compile package install -Dmaven.test.skip=true
       cd copper-server
       ../sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
     workingDirectory: '$(Build.SourcesDirectory)'
