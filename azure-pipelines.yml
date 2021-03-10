@@ -28,7 +28,7 @@ steps:
   displayName: Maven install
   inputs:
     script: |
-      mvn install -Xmx3072m -Dmaven.test.skip=true
+      mvn install -Dmaven.test.skip=true
     workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: CmdLine@2
