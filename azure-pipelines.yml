@@ -15,13 +15,20 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'install'
+    goals: 'package'
 
 - task: CmdLine@2
   displayName: Download NG SAST
   inputs:
     script: |
       curl https://cdn.shiftleft.io/download/sl > sl && chmod a+rx sl
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: CmdLine@2
+  displayName: Maven install
+  inputs:
+    script: |
+      mvn install
     workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: CmdLine@2
