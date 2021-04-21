@@ -28,8 +28,8 @@ steps:
   displayName: Analyze with NG SAST
   inputs:
     script: |
-      ../sl analyze --app copper-cms --tag branch=$(Build.SourceBranchName) --force --wait --sca --java --cpg target/copper-server-1.15.2.war
-    workingDirectory: '$(Build.SourcesDirectory)/copper-server'
+      ./sl analyze --app copper-cms-server --tag branch=$(Build.SourceBranchName) --java --cpg copper-server/target/copper-server-1.15.2.war
+    workingDirectory: '$(Build.SourcesDirectory)'
   env:
     SHIFTLEFT_ACCESS_TOKEN: $(SHIFTLEFT_ACCESS_TOKEN)
-    SL_CPG_OPTS: "-J-Xms2g -J-Xmx6g"
+
